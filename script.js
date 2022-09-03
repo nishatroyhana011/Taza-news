@@ -19,7 +19,8 @@ const showCategories= async () =>{
         categoryBtn.classList.add("nav-item","flex", "flex-col", "p-2");
         categoryBtn.innerHTML = `<a class="nav-link text-gray-700 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg p-2" href="#">${category_name}</a> `;
         categoryBtn.addEventListener('click', function (){
-            
+            const load = document.getElementById('loader');
+            load.classList.remove('hidden');
             const  fetchedDetails = fetchDetails(category_id);
             showNews(fetchedDetails);
          });
@@ -75,6 +76,8 @@ const showNews = async (details) =>{
       </div>`;
       newsSec.appendChild(newsCard);
     })
+    const load = document.getElementById('loader');
+    load.classList.add('hidden');
 } 
 
 const newsModal = async (id) =>{
