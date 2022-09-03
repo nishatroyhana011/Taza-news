@@ -43,24 +43,46 @@ const showNews = async (details) =>{
     const newsSec = document.getElementById('news-section');
     newsSec.innerHTML = '';
     detailNews.forEach(news => {
-        const {title, details, total_view, thumbnail_url } = news;
-        console.log(title,details,total_view,thumbnail_url)
+        
+        const {_id, title, details, total_view, thumbnail_url,author } = news;
         const newsCard = document.createElement('div');
         newsCard.innerHTML = `<div class="flex justify-center">
-        <div class="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg">
+        <div class="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-indigo-50 shadow-lg">
           <img class=" w-full h-96 md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg" src="${thumbnail_url}" alt="" />
           <div class="p-6 flex flex-col justify-start">
-            <h5 class="text-gray-900 text-xl font-medium mb-2">${title}</h5>
+            <h5 class="text-indigo-900 text-xl font-semibold mb-2">${title}</h5>
             <p class="text-gray-700 text-base mb-4">
-              This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.
+              ${details.slice(0, 150)}
             </p>
-            <p class="text-gray-600 text-xs">Last updated 3 mins ago</p>
+            <div class="flex items-center"> 
+                <div class="mr-4">
+                    <img src="${author.img}" class="w-10 h-auto rounded-full" alt="">
+                </div> 
+                <div>
+                    <p class="text-indigo-900 text-base font-medium">${author.name}</p>
+                    <p>${author.published_date}</p>
+                </div>
+            </div>
+            <div class = "flex items-center justify-between">
+                <div class="flex items-center mt-2"> <i class="fa-solid fa-eye"></i><p class="text-gray-600 text-base">${total_view}</p>  </div>
+                <div>
+                    <button data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" onclick="newsModal('${_id}')" class="text-indigo-900">View more <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div
           </div>
         </div>
       </div>`;
-      console.log(newsCard)
-    //   newsSec.innerHTML=newsCard;
       newsSec.appendChild(newsCard);
     })
 } 
+
+const newsModal = async (id) =>{
+    const url = `https://openapi.programming-hero.com/api/news/${id}`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    const newsdetail = data.data[0];
+    console.log(newsdetail);
+    const {_id, title,author, details,  thumbnail_url, others_info,rating, image_url, total_view,} = newsdetail;
+   // document.getElementById('exampleModalScrollableLabel').innerText = `${news.title}`;
+}
 showCategories();
