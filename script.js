@@ -44,6 +44,9 @@ const showNews = async (details) =>{
     const newsList = await details;
     newsList.sort(function(a, b){return(b.total_view)-(a.total_view)});
     const newsSec = document.getElementById('news-section');
+    console.log(newsList.length)
+    document.getElementById('message').innerHTML = `<h5 class="text-indigo-900 text-center text-2xl font-semibold mb-4 bg-indigo-50">${newsList.length?newsList.length:'No'} news found</h5>`;
+
     newsSec.innerHTML = '';
     newsList.forEach(news => {
         const {_id, title, details, total_view, thumbnail_url,author } = news;
