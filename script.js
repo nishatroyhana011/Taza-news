@@ -13,11 +13,13 @@ const fetchCategories = async() =>{
 const showCategories= async () =>{
     const categories = document.getElementById('categories');
     const data = await fetchCategories();
+
     data.forEach(category => {
         const {category_id, category_name} =category;
         const categoryBtn = document.createElement('li');
         categoryBtn.classList.add("nav-item","flex", "flex-col", "p-2");
         categoryBtn.innerHTML = `<a class="nav-link text-gray-700 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg p-2" href="#">${category_name}</a> `;
+        
         categoryBtn.addEventListener('click', function (){
             const load = document.getElementById('loader');
             load.classList.remove('hidden');
@@ -44,14 +46,14 @@ const showNews = async (details) =>{
     const newsList = await details;
     newsList.sort(function(a, b){return(b.total_view)-(a.total_view)});
     const newsSec = document.getElementById('news-section');
-    console.log(newsList.length)
     document.getElementById('message').innerHTML = `<h5 class="text-indigo-900 text-center text-2xl font-semibold mb-4 bg-indigo-50">${newsList.length?newsList.length:'No'} news found</h5>`;
 
     newsSec.innerHTML = '';
     newsList.forEach(news => {
         const {_id, title, details, total_view, thumbnail_url,author } = news;
         const newsCard = document.createElement('div');
-        newsCard.innerHTML = `<div class="flex justify-center">
+        newsCard.innerHTML =
+         `<div class="flex justify-center">
         <div class="flex flex-col xl:flex-row  rounded-lg bg-indigo-50 shadow-lg">
           <img class=" w-full h-96 md:h-auto object-cover rounded-t-md" src="${thumbnail_url}" alt="" />
           <div class="p-6 flex flex-col justify-start">
@@ -88,7 +90,7 @@ const newsModal = async (id) =>{
     const resp = await fetch(url);
     const data = await resp.json();
     const newsdetail = data.data[0];
-    console.log(newsdetail);
+   
     const {_id, title,author, details, others_info,rating, image_url, total_view,} = newsdetail;
    document.getElementById('exampleModalScrollableLabel').innerText = `${title}`;
    document.getElementById('news-detail').innerHTML = `
@@ -113,6 +115,10 @@ const newsModal = async (id) =>{
         <p class="text-gray-700 text-base mb-4">
         ${details}
         </p>
+        <p class="text-indigo-800 text-base mb-4">
+        Tags: ${others_info.is_todays_pick?'Today\'s pick':''} ${others_info.is_trending?'Trending':''}
+        </p>
+
    </div> `;
    
 }
