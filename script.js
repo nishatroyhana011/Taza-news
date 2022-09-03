@@ -15,10 +15,11 @@ const showCategories= async () =>{
     const data = await fetchCategories();
     data.forEach(category => {
         const {category_id, category_name} =category;
-        const categoryBtn = document.createElement('button');
-        categoryBtn.classList.add("text-black", "p-2","text-gray-700", "hover:bg-indigo-50", "rounded-lg");
-        categoryBtn.innerText = category_name;
+        const categoryBtn = document.createElement('li');
+        categoryBtn.classList.add("nav-item","flex", "flex-col", "p-2");
+        categoryBtn.innerHTML = `<a class="nav-link text-gray-700 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg p-2" href="#">${category_name}</a> `;
         categoryBtn.addEventListener('click', function (){
+            
             const  fetchedDetails = fetchDetails(category_id);
             showNews(fetchedDetails);
          });
@@ -39,20 +40,20 @@ const fetchDetails = async (id) => {
 } 
 
 const showNews = async (details) =>{
-    const detailNews = await details;
+    const newsList = await details;
+    newsList.sort(function(a, b){return(b.total_view)-(a.total_view)});
     const newsSec = document.getElementById('news-section');
     newsSec.innerHTML = '';
-    detailNews.forEach(news => {
-        
+    newsList.forEach(news => {
         const {_id, title, details, total_view, thumbnail_url,author } = news;
         const newsCard = document.createElement('div');
         newsCard.innerHTML = `<div class="flex justify-center">
-        <div class="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-indigo-50 shadow-lg">
-          <img class=" w-full h-96 md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg" src="${thumbnail_url}" alt="" />
+        <div class="flex flex-col xl:flex-row  rounded-lg bg-indigo-50 shadow-lg">
+          <img class=" w-full h-96 md:h-auto object-cover rounded-t-md" src="${thumbnail_url}" alt="" />
           <div class="p-6 flex flex-col justify-start">
             <h5 class="text-indigo-900 text-xl font-semibold mb-2">${title}</h5>
             <p class="text-gray-700 text-base mb-4">
-              ${details.slice(0, 150)}
+              ${details.slice(0, 150)}...
             </p>
             <div class="flex items-center"> 
                 <div class="mr-4">
@@ -63,8 +64,8 @@ const showNews = async (details) =>{
                     <p>${author.published_date?author.published_date:"No data found"}</p>
                 </div>
             </div>
-            <div class = "flex items-center justify-between">
-                <div class="flex items-center mt-2"> <i class="fa-solid fa-eye"></i><p class="text-gray-600 text-base">${total_view?total_view:"No Data Found"}</p>  </div>
+            <div class = "flex items-center justify-between mt-3">
+                <div class="flex items-center"> <i class="fa-solid fa-eye"></i><p class="text-gray-600 text-base">${total_view?total_view:"No Data Found"}</p>  </div>
                 <div>
                     <button data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" onclick="newsModal('${_id}')" class="text-indigo-900">View more <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
@@ -88,7 +89,7 @@ const newsModal = async (id) =>{
   
    <img class="w-full h-96 md:h-auto object-cover" src="${image_url}" alt="" />
    <div class="p-5">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between my-3">
             <div class="flex items-center"> 
                 <div class="mr-4">
                     <img src="${author.img}" class="w-10 h-auto rounded-full" alt="">
@@ -98,7 +99,7 @@ const newsModal = async (id) =>{
                     <p>${author.published_date?author.published_date:"No Data Found"} </p>
                 </div>
             </div>
-            <div class="flex items-center mt-2"> 
+            <div class="flex items-center mt-3"> 
                 <i class="fa-solid fa-star mx-2 text-red-500"></i><p class="text-gray-600 text-base">${rating.number?rating.number:"No Data Found"}</p>  
                 <i class="fa-solid fa-eye mx-2 text-indigo-800"></i><p class="text-gray-600 text-base">${total_view?total_view:"No Data Found"}</p>  
             </div>
