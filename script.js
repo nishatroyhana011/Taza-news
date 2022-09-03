@@ -59,12 +59,12 @@ const showNews = async (details) =>{
                     <img src="${author.img}" class="w-10 h-auto rounded-full" alt="">
                 </div> 
                 <div>
-                    <p class="text-indigo-900 text-base font-medium">${author.name}</p>
-                    <p>${author.published_date}</p>
+                    <p class="text-indigo-900 text-base font-medium">${author.name?author.name:"No Data Found"}</p>
+                    <p>${author.published_date?author.published_date:"No data found"}</p>
                 </div>
             </div>
             <div class = "flex items-center justify-between">
-                <div class="flex items-center mt-2"> <i class="fa-solid fa-eye"></i><p class="text-gray-600 text-base">${total_view}</p>  </div>
+                <div class="flex items-center mt-2"> <i class="fa-solid fa-eye"></i><p class="text-gray-600 text-base">${total_view?total_view:"No Data Found"}</p>  </div>
                 <div>
                     <button data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" onclick="newsModal('${_id}')" class="text-indigo-900">View more <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
@@ -82,7 +82,31 @@ const newsModal = async (id) =>{
     const data = await resp.json();
     const newsdetail = data.data[0];
     console.log(newsdetail);
-    const {_id, title,author, details,  thumbnail_url, others_info,rating, image_url, total_view,} = newsdetail;
-   // document.getElementById('exampleModalScrollableLabel').innerText = `${news.title}`;
+    const {_id, title,author, details, others_info,rating, image_url, total_view,} = newsdetail;
+   document.getElementById('exampleModalScrollableLabel').innerText = `${title}`;
+   document.getElementById('news-detail').innerHTML = `
+  
+   <img class="w-full h-96 md:h-auto object-cover" src="${image_url}" alt="" />
+   <div class="p-5">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center"> 
+                <div class="mr-4">
+                    <img src="${author.img}" class="w-10 h-auto rounded-full" alt="">
+                </div> 
+                <div>
+                    <p class="text-indigo-900 text-base font-medium">${author.name?author.name:"No data found"}</p>
+                    <p>${author.published_date?author.published_date:"No Data Found"} </p>
+                </div>
+            </div>
+            <div class="flex items-center mt-2"> 
+                <i class="fa-solid fa-star mx-2 text-red-500"></i><p class="text-gray-600 text-base">${rating.number?rating.number:"No Data Found"}</p>  
+                <i class="fa-solid fa-eye mx-2 text-indigo-800"></i><p class="text-gray-600 text-base">${total_view?total_view:"No Data Found"}</p>  
+            </div>
+        </div>    
+        <p class="text-gray-700 text-base mb-4">
+        ${details}
+        </p>
+   </div> `;
+   
 }
 showCategories();
