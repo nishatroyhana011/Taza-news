@@ -1,3 +1,4 @@
+//fetch all categories
 const fetchCategories = async() =>{
     try{
         const res = await fetch('https://openapi.programming-hero.com/api/news/categories') ;
@@ -5,11 +6,11 @@ const fetchCategories = async() =>{
         return data.data.news_category;
     }
     catch(error){
-        console.log(error);
-        alert('Data not found');
+        document.getElementById('message').innerHTML =  `<h5 class="text-red-700 text-center text-2xl font-semibold mb-4 bg-indigo-50">No news found</h5>`;
     }
 }
 
+//show all categories
 const showCategories= async () =>{
     const categories = document.getElementById('categories');
     const data = await fetchCategories();
@@ -30,6 +31,7 @@ const showCategories= async () =>{
     })
 }
 
+//fetch all news of one category
 const fetchDetails = async (id) => {
     try{
        const res = await fetch(`https://openapi.programming-hero.com/api/news/category/${id}`) ;
@@ -37,11 +39,11 @@ const fetchDetails = async (id) => {
        return data.data;
    }
    catch(error){
-       console.log(error);
-       alert('Data not found');
+       document.getElementById('message').innerHTML =  `<h5 class="text-red-700 text-center text-2xl font-semibold mb-4 bg-indigo-50">No news found</h5>`;
    }
 } 
 
+//show all news of one category
 const showNews = async (details) =>{
     const newsList = await details;
     newsList.sort(function(a, b){return(b.total_view)-(a.total_view)});
@@ -81,17 +83,19 @@ const showNews = async (details) =>{
       </div>`;
       newsSec.appendChild(newsCard);
     })
+    //spinner
     const load = document.getElementById('loader');
     load.classList.add('hidden');
 } 
 
+//fetch and modal display
 const newsModal = async (id) =>{
     const url = `https://openapi.programming-hero.com/api/news/${id}`;
     const resp = await fetch(url);
     const data = await resp.json();
     const newsdetail = data.data[0];
-   
-    const {_id, title,author, details, others_info,rating, image_url, total_view,} = newsdetail;
+
+    const {_id, title,author, details, others_info,rating, image_url, total_view,thumbnail_url} = newsdetail;
    document.getElementById('exampleModalScrollableLabel').innerText = `${title}`;
    document.getElementById('news-detail').innerHTML = `
   
@@ -103,7 +107,7 @@ const newsModal = async (id) =>{
                     <img src="${author.img}" class="w-10 h-auto rounded-full" alt="">
                 </div> 
                 <div>
-                    <p class="text-indigo-900 text-base font-medium">${author.name?author.name:"No data found"}</p>
+                    <p class="text-indigo-900 text-base font-medium"></p>
                     <p>${author.published_date?author.published_date:"No Data Found"} </p>
                 </div>
             </div>
@@ -111,7 +115,8 @@ const newsModal = async (id) =>{
                 <i class="fa-solid fa-star mx-2 text-red-500"></i><p class="text-gray-600 text-base">${rating.number?rating.number:"No Data Found"}</p>  
                 <i class="fa-solid fa-eye mx-2 text-indigo-800"></i><p class="text-gray-600 text-base">${total_view?total_view:"No Data Found"}</p>  
             </div>
-        </div>    
+        </div> 
+        <img src="${thumbnail_url}" class="w-full h-auto " alt="">  
         <p class="text-gray-700 text-base mb-4">
         ${details}
         </p>
@@ -122,4 +127,6 @@ const newsModal = async (id) =>{
    </div> `;
    
 }
+
 showCategories();
+
